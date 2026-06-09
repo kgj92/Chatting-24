@@ -96,6 +96,36 @@
     button:active {
       opacity: 0.9;
     }
+    #stickerBox {
+  display: none;
+  position: fixed;
+  bottom: 80px;
+  left: 10px;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 220px;
+  z-index: 1000;
+}
+
+#stickerBox img {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+#stickerBox img:hover {
+  background: #f0f0f0;
+}
+
+#emojiBtn {
+  font-size: 24px;
+  padding: 8px;
+}
   </style>
 </head>
 <body>
@@ -106,6 +136,16 @@
     <input id="message" placeholder="메시지를 입력하세요..." />
     <input type="file" id="imageInput" accept="image/*" />
     <button onclick="sendMessage()">보내기</button>
+    <button id="emojiBtn">😊</button>
+
+<div id="stickerBox">
+  <img src="stickers/1.png" onclick="sendSticker('stickers/1.png')">
+  <img src="stickers/2.png" onclick="sendSticker('stickers/2.png')">
+  <img src="stickers/3.png" onclick="sendSticker('stickers/3.png')">
+  <img src="stickers/4.png" onclick="sendSticker('stickers/4.png')">
+</div>
+
+<input id="message" placeholder="메시지를 입력하세요..." />
   </div>
 
   <!-- socket.io 연결 -->
@@ -179,6 +219,24 @@
         sendMessage();
       }
     });
+    const emojiBtn = document.getElementById("emojiBtn");
+const stickerBox = document.getElementById("stickerBox");
+
+emojiBtn.addEventListener("click", () => {
+  stickerBox.style.display =
+    stickerBox.style.display === "flex"
+      ? "none"
+      : "flex";
+});
+    function sendSticker(src) {
+  socket.emit("chat message", {
+    type: "image",
+    content: src,
+    time: getTime()
+  });
+
+  stickerBox.style.display = "none";
+}
   </script>
 </body>
 </html>
